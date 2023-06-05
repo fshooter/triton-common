@@ -31,6 +31,10 @@
 #if defined(__GNUC__) && __GNUC__ >= 8
 #pragma GCC diagnostic ignored "-Wclass-memaccess"
 #endif
+// Remove GetObject definition from windows.h, which prevents calls to
+// RapidJSON's GetObject.
+// https://github.com/Tencent/rapidjson/issues/1448
+#undef GetObject
 #include <rapidjson/document.h>
 #pragma GCC diagnostic pop
 
@@ -571,7 +575,7 @@ class TritonJson {
         TRITONJSON_STATUSRETURN(
             std::string("attempt to get members for non-object"));
       }
-      for (const auto& m : object.GetObject()) {
+      for (const auto& m : object.GetObj()) {
         names->push_back(m.name.GetString());
       }
       return TRITONJSON_STATUSSUCCESS;
